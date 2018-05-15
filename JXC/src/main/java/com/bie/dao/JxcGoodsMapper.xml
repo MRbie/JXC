@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcGoodsMapper" >
+  <resultMap id="JxcGoodsResultMap" type="com.bie.po.JxcGoods" >
+    <id column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="goods_brand" property="goodsBrand" jdbcType="VARCHAR" />
+    <result column="goods_color" property="goodsColor" jdbcType="VARCHAR" />
+    <result column="goods_specifications" property="goodsSpecifications" jdbcType="VARCHAR" />
+    <result column="goods_picture" property="goodsPicture" jdbcType="CHAR" />
+    <result column="goods_material" property="goodsMaterial" jdbcType="VARCHAR" />
+    <result column="goods_buyPrice" property="goodsBuyprice" jdbcType="DOUBLE" />
+    <result column="goods_salePrice" property="goodsSaleprice" jdbcType="DOUBLE" />
+    <result column="goods_model" property="goodsModel" jdbcType="VARCHAR" />
+    <result column="goods_desc" property="goodsDesc" jdbcType="VARCHAR" />
+    <result column="goods_updater" property="goodsUpdater" jdbcType="VARCHAR" />
+    <result column="goods_updatetime" property="goodsUpdatetime" jdbcType="VARCHAR" />
+    <result column="goods_status" property="goodsStatus" jdbcType="VARCHAR" />
+    <result column="goods_extend" property="goodsExtend" jdbcType="VARCHAR" />
+    <result column="goods_extend" property="goodsExtend" jdbcType="VARCHAR" />
+    <result column="goods_producer" property="goodsProducer" jdbcType="VARCHAR" />
+    <result column="goods_lowerlimit" property="goodsLowerLimit" jdbcType="INTEGER" />
+    
+    <result column="goods_buyPrice" property="goodsBuyPrice" jdbcType="INTEGER" />
+  	<result column="goods_salePrice" property="goodsSalePrice" jdbcType="INTEGER" />
+  	
+    
+  </resultMap>
+  
+  <!-- goodsBuyPrice goodsSalePrice
+	//goodsId goodsName goodsCode goodsType goodsBrand goodsColor
+  	//goodsSpecifications goodsPicture goodsMaterial  goodsBuyprice 
+  	//goodsSaleprice goodsModel goodsDesc goodsUpdater goodsUpdatetime
+    //goodsStatus goodsExtend goodsProducer goodsLowerLimit
+  -->
+  <!-- 商品插入的方法 -->
+  <insert id="insert" parameterType="JxcGoods">
+  	insert into 
+	jxc_goods(goods_name,goods_code,goods_type,goods_brand,goods_color,goods_specifications,goods_picture,goods_material,goods_buyPrice,goods_salePrice,goods_model,goods_desc,goods_updater,goods_updatetime,goods_status,goods_extend,goods_producer,goods_lowerlimit)
+	values(#{goodsName},#{goodsCode},#{goodsType},#{goodsBrand},#{goodsColor},#{goodsSpecifications},#{goodsPicture},#{goodsMaterial},#{goodsBuyprice},#{goodsSaleprice},#{goodsModel},#{goodsDesc},#{goodsUpdater},#{goodsUpdatetime},#{goodsStatus},#{goodsExtend},#{goodsProducer},#{goodsLowerLimit})
+  </insert>
+  	
+  <!-- 商品查询的方法 -->
+  <select id="selectAll" parameterType="JxcGoods" resultMap="JxcGoodsResultMap">
+  	select * from jxc_goods
+  	<where>
+  		<if test="goodsStatus == null">
+  			goods_status=5000
+  		</if>
+  		<if test="goodsName != null">
+  			and goods_name  like CONCAT('%',#{goodsName},'%')
+  		</if>
+  		<if test="goodsBrand != null">
+  			and goods_brand  like CONCAT('%',#{goodsBrand},'%')
+  		</if>
+  		<if test="goodsColor != null">
+  			and goods_color  like CONCAT('%',#{goodsColor},'%')
+  		</if>
+  	</where>
+  </select>	
+  
+  <!-- 商品查询个人的sql -->
+  <select id="select" parameterType="JxcGoods" resultMap="JxcGoodsResultMap">
+  	select * 
+  	from 
+  		jxc_goods 
+  	where
+  		goods_id=#{goodsId}
+  </select>
+  
+  <!-- 商品修改的sql,goods_status=#{goodsStatus}, -->
+  <update id="update" parameterType="JxcGoods">
+  	update jxc_goods
+  	set 
+  		goods_name=#{goodsName},
+		goods_code=#{goodsCode},
+		goods_type=#{goodsType},
+		goods_brand=#{goodsBrand},
+		goods_color=#{goodsColor},
+		goods_specifications=#{goodsSpecifications},
+		goods_picture=#{goodsPicture},
+		goods_material=#{goodsMaterial},
+		goods_buyPrice=#{goodsBuyprice},
+		goods_salePrice=#{goodsSaleprice},
+		goods_model=#{goodsModel},
+		goods_desc=#{goodsDesc},
+		goods_updater=#{goodsUpdater},
+		goods_updatetime=#{goodsUpdatetime},
+		goods_extend=#{goodsExtend},
+		goods_producer=#{goodsProducer},
+		goods_lowerlimit=#{goodsLowerLimit}
+	  where 
+	  	goods_id=#{goodsId}	
+  </update>
+  
+  <!-- 商品删除的sql -->
+  <delete id="delete" parameterType="JxcGoods">
+  	update jxc_goods
+  	set 
+		goods_status=#{goodsStatus}
+	where 
+	  	goods_id=#{goodsId}
+  </delete>
+  
+  <!-- 批量删除商品的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  
+  <delete id="deleteList">
+  	delete from jxc_goods
+  	where 
+  		goods_id
+  	in
+  	<foreach collection="list" item="goodsId" open="(" close=")" separator=",">
+  		#{goodsId}
+  	</foreach>
+  </delete>
+  
+  <!-- 商品报表统计goods_buyPrice goods_salePrice-->  
+  <select id="selectByGoodsByBuyPrice" resultMap="JxcGoodsResultMap">
+  	SELECT 
+  		g.*,count(g.goods_buyPrice) as goods_buyPrice
+	from 
+		jxc_goods g
+	GROUP BY 
+		g.goods_buyPrice
+  </select>    
+  
+  
+  <select id="selectByGoodsBySalePrice" resultMap="JxcGoodsResultMap">
+  	SELECT 
+  		g.*,count(g.goods_salePrice) as goods_salePrice
+	from 
+		jxc_goods g
+	GROUP BY 
+		g.goods_salePrice
+  </select>	
+		
+		
+</mapper>

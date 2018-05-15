@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcReturnorderdetailMapper" >
+  <resultMap id="BaseResultMap" type="com.bie.po.JxcReturnorderdetail" >
+    <result column="returnorderdetail_id" property="returnorderdetailId" jdbcType="INTEGER" />
+    <result column="good_id" property="goodId" jdbcType="INTEGER" />
+    <result column="returnorderdetail_singleprice" property="returnorderdetailSingleprice" jdbcType="DECIMAL" />
+    <result column="returnorderdetail_totalprice" property="returnorderdetailTotalprice" jdbcType="DECIMAL" />
+    <result column="returnorderdetail_status" property="returnorderdetailStatus" jdbcType="VARCHAR" />
+    <result column="returnorderdetail_extend" property="returnorderdetailExtend" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+</mapper>

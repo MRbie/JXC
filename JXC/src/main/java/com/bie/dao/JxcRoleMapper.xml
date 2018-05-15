@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcRoleMapper" >
+  <resultMap id="JxcRoleResultMap" type="com.bie.po.JxcRole" >
+    <id column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+    <result column="role_status" property="roleStatus" jdbcType="VARCHAR" />
+    <result column="role_updater" property="roleUpdater" jdbcType="VARCHAR" />
+    <result column="role_updatetime" property="roleUpdatetime" jdbcType="VARCHAR" />
+    <result column="role_extend" property="roleExtend" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 角色插入的方法 -->
+  <!-- role_name role_code role_desc role_updater role_updatetime role_extend-->
+  <insert id="insert" parameterType="JxcRole">
+  	insert into jxc_role(role_name,role_code,role_desc,role_status,role_updater,role_updatetime,role_extend)
+  	values(#{roleName},#{roleCode},#{roleDesc},#{roleStatus},#{roleUpdater},#{roleUpdatetime},#{roleExtend})
+  </insert>
+  <!-- 
+  	//roleName roleCode roleDesc roleStatus roleUpdater roleUpdatetime
+	//roleExtend
+   -->	
+  <!-- 角色查询的方法 -->
+  <select id="selectAll" parameterType="JxcRole" resultMap="JxcRoleResultMap">
+  	select * from jxc_role
+  	<where>
+  		<if test="roleStatus == null">
+  			role_status=4000
+  		</if>
+  		<if test="roleName != null">
+  			<!-- and role_name=#{roleName} -->
+  			and role_name like CONCAT('%',#{roleName},'%') 
+  		</if>
+  	</where>
+  </select>	
+  
+  <!-- 角色查询个人的sql -->
+  <select id="select" parameterType="JxcRole" resultMap="JxcRoleResultMap">
+  	select * 
+  	from 
+  		jxc_role 
+  	where
+  		role_id=#{roleId}
+  </select>
+  
+  <!-- role_name role_code role_desc role_updater role_updatetime role_extend-->
+  <!-- 角色修改的sql,role_status=#{roleStatus}, -->
+  <update id="update" parameterType="JxcRole">
+  	update jxc_role
+  	set 
+		role_name=#{roleName},
+		role_code=#{roleCode},
+		role_desc=#{roleDesc},
+		role_updater=#{roleUpdater},
+		role_updatetime=#{roleUpdatetime},
+		role_extend=#{roleExtend}
+	  where 
+	  	role_id=#{roleId}		
+  </update>
+  
+  <!-- 角色删除的sql -->
+  <delete id="delete" parameterType="JxcRole">
+  	update jxc_role
+  	set 
+		role_status=#{roleStatus}
+	where 
+	  	role_id=#{roleId}	
+  </delete>
+  
+  <!-- 批量删除角色的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <delete id="deleteList">
+  	delete from jxc_role
+  	where 
+  		role_id
+  	in
+  	<foreach collection="list" item="roleId" open="(" close=")" separator=",">
+  		#{roleId}
+  	</foreach>
+  </delete>
+  
+  
+</mapper>

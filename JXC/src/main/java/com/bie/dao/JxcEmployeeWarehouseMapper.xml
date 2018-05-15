@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcEmployeeWarehouseMapper" >
+  <resultMap id="JxcEmployeeWarehouseResultMap" type="com.bie.po.JxcEmployeeWarehouse" >
+    <result column="employee_id" property="employeeId" jdbcType="INTEGER" />
+    <result column="warehouse_id" property="warehouseId" jdbcType="INTEGER" />
+  </resultMap>
+  
+</mapper>

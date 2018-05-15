@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcFinancialstatementMapper" >
+  <resultMap id="BaseResultMap" type="com.bie.po.JxcFinancialstatement" >
+    <id column="financialstatement_id" property="financialstatementId" jdbcType="INTEGER" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="financialstatement_date" property="financialstatementDate" jdbcType="VARCHAR" />
+    <result column="financialstatement_status" property="financialstatementStatus" jdbcType="VARCHAR" />
+    <result column="financialstatement_extend" property="financialstatementExtend" jdbcType="VARCHAR" />
+    <result column="financialstatement_update" property="financialstatementUpdate" jdbcType="VARCHAR" />
+    <result column="financialstatement_updatetime" property="financialstatementUpdatetime" jdbcType="VARCHAR" />
+    <result column="financialstatement_shouldpay" property="financialstatementShouldpay" jdbcType="DECIMAL" />
+    <result column="financialstatement_actualpay" property="financialstatementActualpay" jdbcType="DECIMAL" />
+    <result column="financialstatement_discountmoney" property="financialstatementDiscountmoney" jdbcType="DECIMAL" />
+    <result column="financialstatement_remark" property="financialstatementRemark" jdbcType="VARCHAR" />
+    <result column="financialstatement_type" property="financialstatementType" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+</mapper>

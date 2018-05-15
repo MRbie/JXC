@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!--
+		<properties resource="conn.properties" />
+	-->
+	<!-- 处理1 -->
+	<classPathEntry location="E:/mysql-connector-java-5.1.8.jar"/>
+	<!-- 指定运行环境是mybatis3的版本 -->
+	<context id="testTables" targetRuntime="MyBatis3">
+
+		<commentGenerator>
+		<!-- 是否取消注释 -->
+			<property name="suppressAllComments" value="true" />
+			 <!-- 是否生成注释代时间戳 -->
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+		<!-- 处理2   jdbc 连接信息 -->
+		<jdbcConnection 
+			driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/jxc?useUnicode=true&amp;characterEncoding=UTF-8" 
+			userId="root" 
+			password="123456">
+		</jdbcConnection>
+		
+        <!--处理3   targetPackage指定模型在生成在哪个包 ,targetProject指定项目的src,-->        
+		<javaModelGenerator targetPackage="com.bie.po"
+			targetProject="JXC/src/main/resources">
+			<!-- 去除字段前后空格 -->
+			<property name="trimStrings" value="false" />
+		</javaModelGenerator>
+		<!--处理4   配置SQL映射文件生成信息 -->
+		<sqlMapGenerator targetPackage="com.bie.dao"
+			targetProject="JXC/src/main/resources" />
+		<!-- 处理5   配置dao接口生成信息-->
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.bie.dao" targetProject="JXC/src/main/resources" />
+		
+		<!-- 
+			处理6 修改自己对应的数据表和实体类的类名称 
+			注意:如果添加其他数据表,将下面这些注释以后再添加,然后执行。	
+		-->
+		<!-- <table tableName="jxc_admin" domainObjectName="JxcAdmin"/>
+		<table tableName="jxc_customer" domainObjectName="JxcCustomer"/>
+		<table tableName="jxc_employee" domainObjectName="JxcEmployee"/>
+		<table tableName="jxc_goods" domainObjectName="JxcGoods"/>
+		<table tableName="jxc_log" domainObjectName="JxcLog"/>
+		<table tableName="jxc_menu" domainObjectName="JxcMenu"/>
+		<table tableName="jxc_purchaseorder" domainObjectName="JxcPurchaseorder"/>
+		<table tableName="jxc_role" domainObjectName="JxcRole"/>
+		<table tableName="jxc_salesorder" domainObjectName="JxcSalesorder"/>
+		<table tableName="jxc_stock" domainObjectName="JxcStock"/>
+		<table tableName="jxc_supplier" domainObjectName="JxcSupplier"/>
+		<table tableName="jxc_warehouse" domainObjectName="JxcWarehouse"/> -->
+		
+		<!-- <table tableName="jxc_purchaseorderdetail" domainObjectName="JxcPurchaseorderdetail"/>
+		<table tableName="jxc_returnorder" domainObjectName="JxcReturnorder"/>
+		<table tableName="jxc_returnorderdetail" domainObjectName="JxcReturnorderdetail"/>
+		<table tableName="jxc_financialstatement" domainObjectName="JxcFinancialstatement"/> -->
+		
+		<!-- <table tableName="jxc_financialstatement" domainObjectName="JxcFinancialstatement"/> -->
+		<!-- <table tableName="jxc_datadictionary" domainObjectName="JxcDatadictionary"/> -->
+		<!-- <table tableName="jxc_dicdata" domainObjectName="JxcDicdata"/> -->
+		
+		<table tableName="jxc_role_employee" domainObjectName="JxcRoleEmployee"/>
+		<table tableName="jxc_menu_role" domainObjectName="JxcMenuRole"/>
+		<table tableName="jxc_employee_warehouse" domainObjectName="JxcEmployeeWarehouse"/>
+	</context>
+	
+</generatorConfiguration>

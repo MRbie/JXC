@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcDicdataMapper" >
+  <resultMap id="JxcDicdataBaseResultMap" type="com.bie.po.JxcDicdata" >
+    <id column="dicdata_id" property="dicdataId" jdbcType="INTEGER" />
+    <result column="dicdata_name" property="dicdataName" jdbcType="VARCHAR" />
+    <result column="dicdata_code" property="dicdataCode" jdbcType="VARCHAR" />
+    <result column="dicdata_desc" property="dicdataDesc" jdbcType="VARCHAR" />
+    <result column="dicdata_extend" property="dicdataExtend" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 
+  	//dicdataId dicdataName dicdataCode
+	//dicdataDesc dicdataExtend
+   -->
+  <!-- 数据项查询的方法 -->
+  <select id="selectAll" parameterType="JxcDicdata" resultMap="JxcDicdataBaseResultMap">
+  	select * from jxc_dicdata
+  	<where>
+  		<if test="dicdataCode != null">
+  			dicdata_code=#{dicdataCode}
+  			<!-- dicdata_code like CONCAT('%',#{dicdataCode},'%') -->
+  		</if>
+  		<if test="dicdataName != null">
+  			and dicdata_name=#{dicdataName}
+  			<!-- and dicdata_name like CONCAT('%',#{dicdataName},'%') -->
+  		</if>
+  	</where>
+  </select>
+  
+  <!-- 数据项的插入sql -->
+  <insert id="insert" parameterType="JxcDicdata">
+  	insert into 
+  		jxc_dicdata(dicdata_name,dicdata_code,dicdata_desc,dicdata_extend)
+  	values(#{dicdataName},#{dicdataCode},#{dicdataDesc},#{dicdataExtend})
+  </insert>
+  
+  <update id="update" parameterType="JxcDicdata">
+	update jxc_dicdata
+  	set 
+  		dicdata_name=#{dicdataName},
+		dicdata_code=#{dicdataCode},
+		dicdata_desc=#{dicdataDesc},
+		dicdata_extend=#{dicdataExtend}
+	  where 
+	  	dicdata_id=#{dicdataId}		
+  </update>
+  
+  <!-- 字典项删除的sql,-->
+  <delete id="delete" parameterType="JxcDicdata">
+  	delete from 
+  		jxc_dicdata 
+  	where 
+  		dicdata_id=#{dicdataId}		
+  </delete>
+  
+  <!-- 批量删除字典项的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <delete id="deleteList">
+  	delete from jxc_dicdata
+  	where 
+  		dicdata_id
+  	in
+  	<foreach collection="list" item="dicdataId" open="(" close=")" separator=",">
+  		#{dicdataId}
+  	</foreach>
+  </delete>
+  
+  <!-- 字典项查询单个的sql -->
+  <select id="select" parameterType="JxcDicdata" resultMap="JxcDicdataBaseResultMap">
+  	select * 
+  	from 
+  		jxc_dicdata 
+  	where
+  		dicdata_id=#{dicdataId}	
+  </select>
+  
+  <!-- 预插入先将管理员类型从数据字典中查询出来 -->
+  <select id="preInsertAdmin" parameterType="JxcDicdata" resultMap="JxcDicdataBaseResultMap">
+  	select *
+  	from 
+  		jxc_dicdata
+  	where 
+  		dicdata_code=#{dicdataCode}
+  </select>
+  
+  <!-- 预插入先将管理员类型从数据字典中查询出来 -->
+  <select id="getDicDataCode" parameterType="JxcDicdata" resultMap="JxcDicdataBaseResultMap">
+  	select *
+  	from 
+  		jxc_dicdata
+  	where 
+  		dicdata_code=#{dicdataCode}
+  </select>
+  
+  
+</mapper>

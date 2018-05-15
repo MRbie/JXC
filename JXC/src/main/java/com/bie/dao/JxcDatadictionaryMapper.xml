@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcDatadictionaryMapper" >
+  <resultMap id="DatadictionaryResultMap" type="com.bie.po.JxcDatadictionary" >
+    <id column="datadictionary_id" property="datadictionaryId" jdbcType="INTEGER" />
+    <result column="datadictionary_code" property="datadictionaryCode" jdbcType="VARCHAR" />
+    <!-- <result column="datadictionary_value" property="datadictionaryValue" jdbcType="VARCHAR" />
+    <result column="datadictionary_text" property="datadictionaryText" jdbcType="VARCHAR" /> -->
+    <result column="datadictionary_extend" property="datadictionaryExtend" jdbcType="VARCHAR" />
+  	<result column="datadictionary_desc" property="datadictionaryDesc" jdbcType="VARCHAR" />
+  	<result column="datadictionary_name" property="datadictionaryName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 数据字典查询的方法 -->
+  <select id="selectAll" parameterType="JxcDatadictionary" resultMap="DatadictionaryResultMap">
+  	select * from jxc_datadictionary
+  	<where>
+  		<if test="datadictionaryName != null">
+  			datadictionary_name  like CONCAT('%',#{datadictionaryName},'%')
+  		</if>
+  	</where>
+  </select>
+  
+  <!-- 
+  	//datadictionaryCode datadictionaryValue datadictionaryText
+	//datadictionaryExtend datadictionaryDesc datadictionaryName
+   -->
+  <!-- 数据字典插入的方法 -->
+  <!-- insert into 
+  		jxc_datadictionary(datadictionary_code,datadictionary_value,datadictionary_text,datadictionary_extend,datadictionary_desc,datadictionary_name)
+  	values(#{datadictionaryCode},#{datadictionaryValue},#{datadictionaryText},#{datadictionaryExtend},#{datadictionaryDesc},#{datadictionaryName}) -->
+  <insert id="insert" parameterType="JxcDatadictionary">
+  	insert into 
+  		jxc_datadictionary(datadictionary_code,datadictionary_extend,datadictionary_desc,datadictionary_name)
+  	values(#{datadictionaryCode},#{datadictionaryExtend},#{datadictionaryDesc},#{datadictionaryName})
+  </insert>
+  
+  
+  <!-- 数据字典修改的sql -->
+  <!-- update jxc_datadictionary
+  	set 
+  		datadictionary_code=#{datadictionaryCode},
+		datadictionary_value=#{datadictionaryValue},
+		datadictionary_text=#{datadictionaryText},
+		datadictionary_extend=#{datadictionaryExtend},
+		datadictionary_desc=#{datadictionaryDesc},
+		datadictionary_name=#{datadictionaryName}
+	  where 
+	  	datadictionary_id=#{datadictionaryId}
+  -->
+  <update id="update" parameterType="JxcDatadictionary">
+	update jxc_datadictionary
+  	set 
+  		datadictionary_code=#{datadictionaryCode},
+		datadictionary_extend=#{datadictionaryExtend},
+		datadictionary_desc=#{datadictionaryDesc},
+		datadictionary_name=#{datadictionaryName}
+	  where 
+	  	datadictionary_id=#{datadictionaryId}		
+  </update>
+  
+  <!-- 数据字典删除的sql,delete from jxc_datadictionary where datadictionary_id=#{datadictionaryCode} -->
+  <delete id="delete" parameterType="JxcDatadictionary">
+  	delete from 
+  		jxc_datadictionary 
+  	where 
+  		datadictionary_id=#{datadictionaryId}	
+  </delete>
+  
+  <!-- 批量删除数据字典的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <delete id="deleteList">
+  	delete from jxc_datadictionary
+  	where 
+  		datadictionary_id
+  	in
+  	<foreach collection="list" item="datadictionaryId" open="(" close=")" separator=",">
+  		#{datadictionaryId}
+  	</foreach>
+  </delete>
+  
+  <!-- 数据字典查询单个的sql -->
+  <select id="select" parameterType="JxcDatadictionary" resultMap="DatadictionaryResultMap">
+  	select * 
+  	from 
+  		jxc_datadictionary 
+  	where
+  		datadictionary_id=#{datadictionaryId}
+  </select>
+</mapper>

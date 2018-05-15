@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcSupplierMapper" >
+  <resultMap id="JxcSupplierResultMap" type="com.bie.po.JxcSupplier" >
+    <id column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="supplier_ipone" property="supplierIpone" jdbcType="VARCHAR" />
+    <result column="supplier_address" property="supplierAddress" jdbcType="VARCHAR" />
+    <result column="supplier_email" property="supplierEmail" jdbcType="VARCHAR" />
+    <result column="supplier_status" property="supplierStatus" jdbcType="VARCHAR" />
+    <result column="supplier_extends" property="supplierExtends" jdbcType="VARCHAR" />
+    <result column="supplier_updater" property="supplierUpdater" jdbcType="VARCHAR" />
+    <result column="supplier_updatetime" property="supplierUpdatetime" jdbcType="VARCHAR" />
+    <result column="supplier_type" property="supplierType" jdbcType="VARCHAR" />
+    <result column="supplier_remark" property="supplierRemark" jdbcType="VARCHAR" />
+    <result column="supplier_account" property="supplierAccount" jdbcType="VARCHAR" />
+    <result column="supplier_password" property="supplierPassword" jdbcType="VARCHAR" />
+    <result column="supplier_startpay" property="supplierStartPay" jdbcType="VARCHAR" />
+    <result column="supplier_endpay" property="supplierEndPay" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  
+  <!-- 
+	//supplierName supplierIpone supplierAddress supplierEmail
+	//supplierStatus supplierExtends supplierUpdater supplierUpdatetime
+	//supplierType supplierRemark supplierAccount supplierPassword 
+	//supplierStartPay supplierEndPay
+  -->
+  <!-- 供应商插入的方法 jxc_supplier JxcSupplier-->
+  <insert id="insert" parameterType="JxcSupplier">
+  	insert into jxc_supplier(supplier_name,supplier_ipone,supplier_address,supplier_email,supplier_status,supplier_extends,supplier_updater,supplier_updatetime,supplier_type,supplier_remark,supplier_account,supplier_password,supplier_startpay,supplier_endpay)
+  	values(#{supplierName},#{supplierIpone},#{supplierAddress},#{supplierEmail},#{supplierStatus},#{supplierExtends},#{supplierUpdater},#{supplierUpdatetime},#{supplierType},#{supplierRemark},#{supplierAccount},#{supplierPassword},#{supplierStartPay},#{supplierEndPay})
+  </insert>
+  	
+  <!-- 供应商查询的方法 -->
+  <select id="selectAll" parameterType="JxcSupplier" resultMap="JxcSupplierResultMap">
+  	select * from jxc_supplier
+  	<where>
+  		<if test="supplierStatus == null">
+  			supplier_status=6000
+  		</if>
+  		<if test="supplierAccount != null">
+  			and supplier_account  like CONCAT('%',#{supplierAccount},'%')
+  		</if>
+  		<if test="supplierName != null">
+  			and supplier_name  like CONCAT('%',#{supplierName},'%')
+  		</if>
+  		<if test="supplierType != null">
+  			and supplier_type  like CONCAT('%',#{supplierType},'%')
+  		</if>
+  	</where>
+  </select>	
+  
+  <!-- 供应商查询个人的sql -->
+  <select id="select" parameterType="JxcSupplier" resultMap="JxcSupplierResultMap">
+  	select * 
+  	from 
+  		jxc_supplier 
+  	where
+  		supplier_id=#{supplierId}
+  </select>
+  
+  <!-- 供应商修改的sql,supplier_status=#{supplierStatus},-->
+  <update id="update" parameterType="JxcSupplier">
+  	update jxc_supplier
+  	set 
+  		supplier_name=#{supplierName},
+		supplier_ipone=#{supplierIpone},
+		supplier_address=#{supplierAddress},
+		supplier_email=#{supplierEmail},
+		supplier_extends=#{supplierExtends},
+		supplier_updater=#{supplierUpdater},
+		supplier_updatetime=#{supplierUpdatetime},
+		supplier_type=#{supplierType},
+		supplier_remark=#{supplierRemark},
+		supplier_account=#{supplierAccount},
+		supplier_password=#{supplierPassword},
+		supplier_startpay=#{supplierStartPay},
+		supplier_endpay=#{supplierEndPay}
+	  where 
+	  	supplier_id=#{supplierId}	
+  </update>
+  
+  <!-- 供应商删除的sql -->
+  <delete id="delete" parameterType="JxcSupplier">
+  	update jxc_supplier
+  	set 
+		supplier_status=#{supplierStatus}
+	where 
+	  	supplier_id=#{supplierId}
+  </delete>
+  
+  <!-- 批量删除供应商的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <delete id="deleteList">
+  	delete from jxc_supplier
+  	where 
+  		supplier_id
+  	in
+  	<foreach collection="list" item="supplierId" open="(" close=")" separator=",">
+  		#{supplierId}
+  	</foreach>
+  </delete>
+  
+  
+</mapper>

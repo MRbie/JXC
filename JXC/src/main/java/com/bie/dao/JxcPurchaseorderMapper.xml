@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcPurchaseorderMapper" >
+  <resultMap id="JxcPurchaseorderResultMap" type="com.bie.po.JxcPurchaseorder" >
+    <id column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="employee_id" property="employeeId" jdbcType="INTEGER" />
+    <result column="warehouse_id" property="warehouseId" jdbcType="INTEGER" />
+    <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="INTEGER" />
+    <result column="order_price" property="orderPrice" jdbcType="DECIMAL" />
+    <result column="order_tolePrice" property="orderToleprice" jdbcType="DECIMAL" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="order_checkMan" property="orderCheckman" jdbcType="VARCHAR" />
+    <result column="order_checkResult" property="orderCheckresult" jdbcType="VARCHAR" />
+    <result column="order_checkStatus" property="orderCheckstatus" jdbcType="VARCHAR" />
+    <result column="order_desc" property="orderDesc" jdbcType="VARCHAR" />
+    <result column="order_updater" property="orderUpdater" jdbcType="VARCHAR" />
+    <result column="order_updatetime" property="orderUpdatetime" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="order_storageTime" property="orderStoragetime" jdbcType="VARCHAR" />
+    <result column="order_createTime" property="orderCreatetime" jdbcType="VARCHAR" />
+    <result column="order_extends" property="orderExtends" jdbcType="VARCHAR" />
+    <result column="order_shouldPay" property="orderShouldPay" jdbcType="VARCHAR" />
+    <result column="order_actualPayment" property="orderActualPayment" jdbcType="VARCHAR" />
+    <result column="order_arrears" property="orderArrears" jdbcType="VARCHAR" />
+  	<!-- 其他字段的映射 -->
+  	<result column="employee_id" property="jxcEmployee.employeeId" jdbcType="INTEGER" />
+  	<result column="employee_name" property="jxcEmployee.employeeName" jdbcType="VARCHAR" />
+  	<!-- 仓库 -->
+  	<result column="warehouse_id" property="jxcWarehouse.warehouseId" jdbcType="INTEGER" />
+  	<result column="warehouse_name" property="jxcWarehouse.warehouseName" jdbcType="VARCHAR" />
+  	<!-- 供应商 -->
+  	<result column="supplier_id" property="jxcSupplier.supplierId" jdbcType="INTEGER" />
+  	<result column="supplier_name" property="jxcSupplier.supplierName" jdbcType="VARCHAR" />
+  	<!-- 商品 -->
+  	<result column="goods_id" property="jxcGoods.goodsId" jdbcType="INTEGER" />
+  	<result column="goods_name" property="jxcGoods.goodsName" jdbcType="VARCHAR" />
+  	
+  
+  </resultMap>
+  
+  <!-- 
+  	//orderId employeeId warehouseId supplierId
+    //orderCode orderNumber orderPrice orderToleprice
+    //orderStatus orderCheckman orderCheckresult
+    //orderCheckstatus orderDesc orderUpdater orderUpdatetime
+    //orderType orderStoragetime orderCreatetime orderExtends
+    //orderShouldPay orderActualPayment orderArrears
+   -->
+  <!-- 采购订单 -->
+  <insert id="insert" parameterType="JxcPurchaseorder">
+  	insert 
+  	into 
+  	jxc_purchaseorder(goods_id,employee_id,warehouse_id,supplier_id,order_code,order_number,order_price,order_tolePrice,order_status,order_checkMan,order_checkResult,order_checkStatus,order_desc,order_updater,order_updatetime,order_type,order_storageTime,order_createTime,order_extends,order_shouldPay,order_actualPayment,order_arrears)
+  	values(#{goodsId},#{employeeId},#{warehouseId},#{supplierId},#{orderCode},#{orderNumber},#{orderPrice},#{orderToleprice},#{orderStatus},#{orderCheckman},#{orderCheckresult},#{orderCheckstatus},#{orderDesc},#{orderUpdater},#{orderUpdatetime},#{orderType},#{orderStoragetime},#{orderCreatetime},#{orderExtends},#{orderShouldPay},#{orderActualPayment},#{orderArrears})
+  </insert>
+  
+  <!-- 采购订单的查询所有信息 -->
+  <select id="selectAll" parameterType="JxcPurchaseorder" resultMap="JxcPurchaseorderResultMap">
+	select 
+		p.*,
+		w.warehouse_id as "jxcWarehouse.warehouseId",
+		w.warehouse_name as "jxcWarehouse.warehouseName",
+		s.supplier_id as "jxcSupplier.supplierId",
+		s.supplier_name as "jxcSupplier.supplierName",
+		g.goods_id as "jxcGoods.goodsId",
+		g.goods_name as "jxcGoods.goodsName",
+		e.employee_id as "jxcEmployee.employeeId",
+		e.employee_name as "jxcEmployee.employeeName"
+	from 
+		jxc_purchaseorder p,
+		jxc_warehouse w,
+		jxc_supplier s,
+		jxc_employee e,
+		jxc_goods g
+	<where> 
+		p.employee_id=e.employee_id 
+	and 
+		p.goods_id=g.goods_id 
+	and 
+		p.warehouse_id=w.warehouse_id 
+	and 
+		p.supplier_id=s.supplier_id
+		<if test="orderStatus == null">
+			<!-- 只查询状态为1000的 -->
+			and p.order_status=1000
+		</if>
+		<if test="employeeName != null">
+			and e.employee_name=#{employeeName}
+		</if>
+		<if test="supplierName != null">
+			and s.supplier_name=#{supplierName}
+		</if>
+		<if test="warehouseName != null">
+			and w.warehouse_name=#{warehouseName}
+		</if>
+		<if test="goodsName != null">
+			and g.goods_name=#{goodsName}
+		</if>
+  	</where>
+  </select>
+  
+  <!-- <select id="selectAll" parameterType="JxcPurchaseorder" resultMap="JxcPurchaseorderResultMap">
+	select 
+		p.*,
+		w.warehouse_id,
+		w.warehouse_name,
+		s.supplier_id,
+		s.supplier_name,
+		g.goods_id,
+		g.goods_name,
+		e.employee_id,
+		e.employee_name
+	from 
+		jxc_purchaseorder p,
+		jxc_warehouse w,
+		jxc_supplier s,
+		jxc_employee e,
+		jxc_goods g
+	<where> 
+		p.employee_id=e.employee_id 
+	and 
+		p.goods_id=g.goods_id 
+	and 
+		p.warehouse_id=w.warehouse_id 
+	and 
+		p.supplier_id=s.supplier_id
+		<if test="orderStatus == null">
+			and p.order_status!=1004
+		</if>
+		<if test="employeeName != null">
+			and e.employee_name like CONCAT('%',#{employeeName},'%')
+		</if>
+		<if test="supplierName != null">
+			and s.supplier_name like CONCAT('%',#{supplierName},'%')
+		</if>
+		<if test="warehouseName != null">
+			and w.warehouse_name like CONCAT('%',#{warehouseName},'%')
+		</if>
+  	</where>
+  </select>	 -->
+  
+  
+  <!-- 采购订单审核通过 -->
+  <update id="update" parameterType="JxcPurchaseorder">
+  	update jxc_purchaseorder
+  	set 
+		order_status=#{orderStatus}
+	where 
+	  	order_id=#{orderId}
+  </update>
+  
+  
+  <!-- 查询出库存信息 -->
+  <select id="selectAllStock" parameterType="JxcPurchaseorder" resultMap="JxcPurchaseorderResultMap">
+	select 
+		p.*,
+		w.warehouse_id as "jxcWarehouse.warehouseId",
+		w.warehouse_name as "jxcWarehouse.warehouseName",
+		s.supplier_id as "jxcSupplier.supplierId",
+		s.supplier_name as "jxcSupplier.supplierName",
+		g.goods_id as "jxcGoods.goodsId",
+		g.goods_name as "jxcGoods.goodsName",
+		e.employee_id as "jxcEmployee.employeeId",
+		e.employee_name as "jxcEmployee.employeeName"
+	from 
+		jxc_purchaseorder p,
+		jxc_warehouse w,
+		jxc_supplier s,
+		jxc_employee e,
+		jxc_goods g
+	<where> 
+		p.employee_id=e.employee_id 
+	and 
+		p.goods_id=g.goods_id 
+	and 
+		p.warehouse_id=w.warehouse_id 
+	and 
+		p.supplier_id=s.supplier_id
+		<if test="orderStatus == null">
+			and p.order_status=1001
+		</if>
+		<if test="employeeName != null">
+			and e.employee_name=#{employeeName}
+		</if>
+		<if test="supplierName != null">
+			and s.supplier_name=#{supplierName}
+		</if>
+		<if test="warehouseName != null">
+			and w.warehouse_name=#{warehouseName}
+		</if>
+		<if test="goodsName != null">
+			and g.goods_name=#{goodsName}
+		</if>
+  	</where>
+  </select>
+  
+  
+  <!-- 采购订单的查询审核通过所有信息 -->
+  <select id="purchaseorderPassAndRefuseAndReturn" parameterType="JxcPurchaseorder" resultMap="JxcPurchaseorderResultMap">
+	select 
+		p.*,
+		w.warehouse_id as "jxcWarehouse.warehouseId",
+		w.warehouse_name as "jxcWarehouse.warehouseName",
+		s.supplier_id as "jxcSupplier.supplierId",
+		s.supplier_name as "jxcSupplier.supplierName",
+		g.goods_id as "jxcGoods.goodsId",
+		g.goods_name as "jxcGoods.goodsName",
+		e.employee_id as "jxcEmployee.employeeId",
+		e.employee_name as "jxcEmployee.employeeName"
+	from 
+		jxc_purchaseorder p,
+		jxc_warehouse w,
+		jxc_supplier s,
+		jxc_employee e,
+		jxc_goods g
+	<where> 
+		p.employee_id=e.employee_id 
+	and 
+		p.goods_id=g.goods_id 
+	and 
+		p.warehouse_id=w.warehouse_id 
+	and 
+		p.supplier_id=s.supplier_id
+		<if test="orderStatus != null">
+			and p.order_status=#{orderStatus}
+		</if>
+		<if test="employeeName != null">
+			and e.employee_name=#{employeeName}
+		</if>
+		<if test="supplierName != null">
+			and s.supplier_name=#{supplierName}
+		</if>
+		<if test="warehouseName != null">
+			and w.warehouse_name=#{warehouseName}
+		</if>
+		<if test="goodsName != null">
+			and g.goods_name=#{goodsName}
+		</if>
+  	</where>
+  </select>
+  
+  <!-- 销售订单功能 -->
+  <update id="saleOrder" parameterType="JxcPurchaseorder">
+  	update jxc_purchaseorder
+  	set 
+		order_number=#{orderNumber}
+	where 
+	  	order_id=#{orderId}
+  </update>
+  
+  
+  <!-- 采购订单的查询所有信息 -->
+  <select id="select" parameterType="JxcPurchaseorder" resultMap="JxcPurchaseorderResultMap">
+	select 
+		p.*,
+		w.warehouse_id as "jxcWarehouse.warehouseId",
+		w.warehouse_name as "jxcWarehouse.warehouseName",
+		s.supplier_id as "jxcSupplier.supplierId",
+		s.supplier_name as "jxcSupplier.supplierName",
+		g.goods_id as "jxcGoods.goodsId",
+		g.goods_name as "jxcGoods.goodsName",
+		e.employee_id as "jxcEmployee.employeeId",
+		e.employee_name as "jxcEmployee.employeeName"
+	from 
+		jxc_purchaseorder p,
+		jxc_warehouse w,
+		jxc_supplier s,
+		jxc_employee e,
+		jxc_goods g
+	<where> 
+		p.employee_id=e.employee_id 
+	and 
+		p.goods_id=g.goods_id 
+	and 
+		p.warehouse_id=w.warehouse_id 
+	and 
+		p.supplier_id=s.supplier_id
+		<if test="orderStatus == null">
+			<!-- 只查询状态为1001的  -->
+			and p.order_status=1001
+		</if>
+		<if test="orderId != null">
+			and p.order_id=#{orderId}
+		</if>
+  	</where>
+  </select>
+  
+</mapper>

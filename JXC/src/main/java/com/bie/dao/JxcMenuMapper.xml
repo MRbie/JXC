@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcMenuMapper" >
+  <resultMap id="JxcMenuResultMap" type="com.bie.po.JxcMenu" >
+    <id column="menu_id" property="menuId" jdbcType="INTEGER" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="menu_upId" property="menuUpid" jdbcType="INTEGER" />
+    <result column="menu_path" property="menuPath" jdbcType="VARCHAR" />
+    <result column="menu_status" property="menuStatus" jdbcType="VARCHAR" />
+    <result column="menu_isLeaf" property="menuIsleaf" jdbcType="VARCHAR" />
+    <result column="menu_updater" property="menuUpdater" jdbcType="VARCHAR" />
+    <result column="menu_updatetime" property="menuUpdatetime" jdbcType="VARCHAR" />
+    <result column="menu_extend" property="menuExtend" jdbcType="VARCHAR" />
+  	
+  </resultMap>
+  
+  <!-- jxc_menu  JxcMenu
+  	//menuId menuName menuUpid menuPath menuStatus
+    //menuIsleaf menuUpdater menuUpdatetime menuExtend
+   -->
+  <!-- 菜单插入的方法 -->
+  <!-- <insert id="insert" parameterType="JxcMenu">
+  	insert into jxc_menu(menu_name,menu_upId,menu_path,menu_status,menu_isLeaf,menu_updater,menu_updatetime,menuExtend)
+  	values(#{menuName},#{menuUpid},#{menuPath},#{menuStatus},#{menuIsleaf},#{menuUpdater},#{menuUpdatetime},#{menuExtend})
+  </insert> -->
+  <insert id="insert" parameterType="JxcMenu">
+  	insert into jxc_menu(menu_name,menu_upId,menu_path,menu_status,menu_isLeaf)
+  	values(#{menuName},#{menuUpid},#{menuPath},#{menuStatus},#{menuIsleaf})
+  </insert>
+  
+  	
+  <!-- 菜单查询的方法 -->
+  <select id="selectAll" parameterType="JxcMenu" resultMap="JxcMenuResultMap">
+  	select * from jxc_menu
+  	<where>
+  		<if test="menuStatus == null">
+  			menu_status=9000
+  		</if>
+  		<if test="menuName != null">
+  			and menu_name  like CONCAT('%',#{menuName},'%')
+  		</if>
+  	</where>
+  </select>	
+  
+  <!-- 菜单查询个人的sql,menuId,menu_id -->
+  <select id="select" parameterType="JxcMenu" resultMap="JxcMenuResultMap">
+  	select * 
+  	from 
+  		jxc_menu 
+  	where
+  		menu_id=#{menuId}	
+  </select>
+  
+  <!-- jxc_menu  JxcMenu
+  	//menuId menuName menuUpid menuPath menuStatus
+    //menuIsleaf menuUpdater menuUpdatetime menuExtend
+   -->
+  <!-- 菜单修改的sql,-->
+  <update id="update" parameterType="JxcMenu">
+  	update jxc_menu
+  	set 
+  		menu_name=#{menuName},
+		menu_upId=#{menuUpid},
+		menu_path=#{menuPath},
+		menu_isLeaf=#{menuIsleaf},
+		menu_updater=#{menuUpdater},
+		menu_updatetime=#{menuUpdatetime},
+		menu_extend=#{menuExtend}
+	  where 
+	  	menu_id=#{menuId}		
+  </update>
+  
+  <!-- 菜单删除的sql -->
+  <delete id="delete" parameterType="JxcMenu">
+  	update jxc_menu
+  	set 
+		menu_status=#{menuStatus}
+	where 
+	  	menu_id=#{menuId}	
+  </delete>
+  
+  <!-- 批量删除菜单的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <delete id="deleteList">
+  	delete from jxc_menu
+  	where 
+  		menu_id
+  	in
+  	<foreach collection="list" item="menuId" open="(" close=")" separator=",">
+  		#{menuId}
+  	</foreach>
+  </delete>
+  
+  
+</mapper>

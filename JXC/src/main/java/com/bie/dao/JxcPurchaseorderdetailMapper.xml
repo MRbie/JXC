@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcPurchaseorderdetailMapper" >
+  <resultMap id="BaseResultMap" type="com.bie.po.JxcPurchaseorderdetail" >
+    <id column="orderdetail_id" property="orderdetailId" jdbcType="INTEGER" />
+    <result column="good_id" property="goodId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="orderdetail_number" property="orderdetailNumber" jdbcType="INTEGER" />
+    <result column="orderdetail_buyprice" property="orderdetailBuyprice" jdbcType="DECIMAL" />
+    <result column="orderdetail_totalprice" property="orderdetailTotalprice" jdbcType="DECIMAL" />
+    <result column="orderdetail_status" property="orderdetailStatus" jdbcType="VARCHAR" />
+    <result column="orderdetail_extend" property="orderdetailExtend" jdbcType="VARCHAR" />
+  </resultMap>
+  
+</mapper>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcEmployeeMapper" >
+  <resultMap id="JxcEmployeeResultMap" type="com.bie.po.JxcEmployee">
+    <id column="employee_id" property="employeeId" jdbcType="INTEGER" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
+    <result column="employee_account" property="employeeAccount" jdbcType="VARCHAR" />
+    <result column="employee_password" property="employeePassword" jdbcType="VARCHAR" />
+    <result column="employee_age" property="employeeAge" jdbcType="INTEGER" />
+    <result column="employee_sex" property="employeeSex" jdbcType="VARCHAR" />
+    <result column="employee_birthday" property="employeeBirthday" jdbcType="VARCHAR" />
+    <result column="employee_address" property="employeeAddress" jdbcType="VARCHAR" />
+    <result column="employee_status" property="employeeStatus" jdbcType="VARCHAR" />
+    <result column="employee_code" property="employeeCode" jdbcType="VARCHAR" />
+    <result column="employee_cardNo" property="employeeCardno" jdbcType="VARCHAR" />
+    <result column="employee_phone" property="employeePhone" jdbcType="VARCHAR" />
+    <result column="employee_email" property="employeeEmail" jdbcType="VARCHAR" />
+    <result column="employee_type" property="employeeType" jdbcType="VARCHAR" />
+    <result column="employee_updater" property="employeeUpdater" jdbcType="VARCHAR" />
+    <result column="employee_updatetime" property="employeeUpdatetime" jdbcType="VARCHAR" />
+    <result column="employee_extend" property="employeeExtend" jdbcType="VARCHAR" />
+  	<!-- role的属性 -->
+  	<result column="role_id" property="jxRole.roleId" jdbcType="INTEGER" />
+  	<result column="role_name" property="jxRole.roleName" jdbcType="VARCHAR" />
+  	
+  	<!-- 数据表里面无实际的字段 -->
+  	<result column="roleCount" property="roleCount" jdbcType="INTEGER" />
+  	<result column="salaryCount" property="salaryCount" jdbcType="INTEGER" />
+  	
+  	
+  </resultMap>
+  
+  <!-- 
+  	//employeeName employeeAccount employeePassword employeeAge employeeSex employeeBirthday
+    //employeeAddress employeeStatus employeeCode employeeCardno employeePhone employeeEmail
+    //employeeType employeeUpdater employeeUpdatetime employeeExtend
+   -->
+  <!-- 员工插入的方法 -->
+  <!-- <insert id="insert" parameterType="JxcEmployee">
+  	insert into jxc_employee(role_id,employee_name,employee_account,employee_password,employee_age,employee_sex,employee_birthday,employee_address,employee_status,employee_code,employee_cardNo,employee_phone,employee_email,employee_type,employee_updater,employee_updatetime,employee_extend)
+  	values(#{roleId},#{employeeName},#{employeeAccount},#{employeePassword},#{employeeAge},#{employeeSex},#{employeeBirthday},#{employeeAddress},#{employeeStatus},#{employeeCode},#{employeeCardno},#{employeePhone},#{employeeEmail},#{employeeType},#{employeeUpdater},#{employeeUpdatetime},#{employeeExtend})
+  </insert> -->
+  <insert id="insert" parameterType="JxcEmployee">
+  	insert into jxc_employee(role_id,employee_name,employee_account,employee_password,employee_age,employee_sex,employee_birthday,employee_address,employee_status,employee_code,employee_cardNo,employee_phone,employee_email,employee_updater,employee_updatetime,employee_extend)
+  	values(#{roleId},#{employeeName},#{employeeAccount},#{employeePassword},#{employeeAge},#{employeeSex},#{employeeBirthday},#{employeeAddress},#{employeeStatus},#{employeeCode},#{employeeCardno},#{employeePhone},#{employeeEmail},#{employeeUpdater},#{employeeUpdatetime},#{employeeExtend})
+  </insert>
+  	
+  <!-- 员工查询的方法 -->
+  <select id="selectAll" parameterType="JxcEmployee" resultMap="JxcEmployeeResultMap">
+  	select 
+  		e.*,r.role_name as "jxRole.roleName"
+  	from 
+  		jxc_employee e,jxc_role r
+  	<where>
+  		e.role_id=r.role_id
+  		<if test="employeeStatus == null">
+  			and employee_status=3000
+  		</if>
+  		<if test="employeeAccount != null">
+  			<!-- and employee_account=#{employeeAccount} -->
+  			and employee_account  like CONCAT('%',#{employeeAccount},'%')
+  		</if>
+  		<if test="employeeName != null">
+  			<!-- and employee_name=#{employeeName} -->
+  			and employee_name  like CONCAT('%',#{employeeName},'%')
+  		</if>
+  		<!-- <if test="employeeType != null">
+  			and employee_type=#{employeeType}
+  			and employee_type  like CONCAT('%',#{employeeType},'%')
+  		</if> -->
+  	</where>
+  </select>	
+  
+  <!-- 员工查询个人的sql -->
+  <select id="select" parameterType="JxcEmployee" resultMap="JxcEmployeeResultMap">
+  	select e.*,r.role_name as "jxRole.roleName"
+  	from 
+  		jxc_employee e,jxc_role r
+  	where
+  		e.role_id=r.role_id and employee_id=#{employeeId}
+  </select>
+  
+  <!-- 员工修改的sql,employee_type=#{employeeType}, -->
+  <update id="update" parameterType="JxcEmployee">
+  	update jxc_employee
+  	set 
+  		employee_name=#{employeeName},
+  		role_id=${roleId},
+		employee_account=#{employeeAccount},
+		employee_password=#{employeePassword},
+		employee_age=#{employeeAge},
+		employee_sex=#{employeeSex},
+		employee_birthday=#{employeeBirthday},
+		employee_address=#{employeeAddress},
+		employee_code=#{employeeCode},
+		employee_cardNo=#{employeeCardno},
+		employee_phone=#{employeePhone},
+		employee_email=#{employeeEmail},
+		employee_updater=#{employeeUpdater},
+		employee_updatetime=#{employeeUpdatetime},
+		employee_extend=#{employeeExtend}
+	  where 
+	  	employee_id=#{employeeId}		
+  </update>
+  
+  <!-- 员工删除的sql -->
+  <delete id="delete" parameterType="JxcEmployee">
+  	update jxc_employee
+  	set 
+		employee_status=#{employeeStatus}
+	where 
+	  	employee_id=#{employeeId}	
+  </delete>
+  
+  <!-- 批量删除员工的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <!-- update jxc_employee
+  	set
+  		employee_status=#{employeeStatus},
+  	where 
+  		employee_id
+  	in
+  	<foreach collection="list" item="employeeId" open="(" close=")" separator=",">
+  		#{employeeId}
+  </foreach> -->
+  <delete id="deleteList">
+  	delete from jxc_employee
+  	where 
+  		employee_id
+  	in
+  	<foreach collection="list" item="employeeId" open="(" close=")" separator=",">
+  		#{employeeId}
+  	</foreach>
+  </delete>
+  
+  <!-- 查询指定的管理员 parameterType="JxcEmployee" -->
+  <select id="selectByEmployeeRole" resultMap="JxcEmployeeResultMap">
+  	select e.*,r.role_name
+  	from 
+  		jxc_employee e,jxc_role r
+  	where
+  		e.role_id=r.role_id
+  	and 
+  		r.role_name=#{roleName} 
+  </select>
+  
+  
+  <!-- 管理员登陆的方法,由于登录改造,员工正常状态是3000 -->
+  <select id="adminLogin" parameterType="JxcEmployee" resultMap="JxcEmployeeResultMap">
+  	select 
+		e.*,r.role_name
+	from 
+		jxc_employee e,jxc_role r
+	<where>
+		e.role_id=r.role_id
+		<if test="employeeAccount != null">
+		and	employee_account=#{employeeAccount} 
+		</if>
+		<if test="employeePassword != null">
+		and 
+			employee_password=#{employeePassword}
+		</if>
+		<if test="employeeStatus == null">
+		and
+  			employee_status=3000
+		</if>
+	</where>
+  </select>
+  
+  <!-- 管理员密码修改的方法 -->
+  <update id="modifyPassword" parameterType="JxcEmployee">
+  	update jxc_employee
+  	set 
+		employee_password=#{employeePassword}
+	where 
+	  	employee_id=#{employeeId}		
+  </update>
+  
+  
+  <!--根据员工名字查询员工信息-->
+  <select id="findEmployeeByEmployeeName" resultMap="JxcEmployeeResultMap">
+      select 
+      	* 
+      from 
+      	jxc_employee 
+      where
+      	employee_name=#{employeeName}
+  </select>
+    
+  <!-- 根据员工名字查询相应权限 -->
+  <select id="findPermissionsByEmployeeName" parameterType="string" resultType="string">
+      select m.menu_upId
+      from 
+      	jxc_employee e,
+      	jxc_role r,
+      	jxc_menu m,
+      	jxc_menu_role mr
+      where 
+      	e.employee_name=#{employeeName}
+      	and e.role_id = r.role_id 
+       	and mr.menu_id = m.menu_id 
+       	and mr.role_id = r.role_id 
+  </select>
+    
+  <!-- 员工报表统计 -->  
+  <select id="selectByEmployeeRoleType" resultMap="JxcEmployeeResultMap">
+  	SELECT 
+  		e.*,r.role_name,count(e.role_id) as roleCount
+	from 
+		jxc_employee e,jxc_role r
+	where 
+		e.role_id=r.role_id
+	GROUP BY 
+		e.role_id
+  </select>    
+  
+  <!-- 员工薪资报表统计 -->
+  <select id="selectByEmployeeSalary" resultMap="JxcEmployeeResultMap">
+  	SELECT 
+  		e.employee_extend,count(e.employee_extend) as salaryCount
+	from 
+		jxc_employee e
+	GROUP BY 
+		e.employee_extend
+  </select>  
+  
+  
+  
+</mapper>

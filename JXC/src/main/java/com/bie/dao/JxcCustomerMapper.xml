@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcCustomerMapper" >
+  <resultMap id="JxcCustomerResultMap" type="com.bie.po.JxcCustomer" >
+    <id column="customer_id" property="customerId" jdbcType="INTEGER" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="customer_iphone" property="customerIphone" jdbcType="VARCHAR" />
+    <result column="customer_email" property="customerEmail" jdbcType="VARCHAR" />
+    <result column="customer_address" property="customerAddress" jdbcType="VARCHAR" />
+    <result column="customer_desc" property="customerDesc" jdbcType="VARCHAR" />
+    <result column="customer_status" property="customerStatus" jdbcType="VARCHAR" />
+    <result column="customer_updater" property="customerUpdater" jdbcType="VARCHAR" />
+    <result column="customer_updatetime" property="customerUpdatetime" jdbcType="VARCHAR" />
+    <result column="customer_extends" property="customerExtends" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 
+  	//customerId customerName customerIphone customerEmail
+	//customerAddress customerDesc customerStatus
+	//customerUpdater customerUpdatetime customerExtends
+   -->
+  <!-- 客户插入的方法 -->
+  <insert id="insert" parameterType="JxcCustomer">
+  	insert into jxc_customer(customer_name,customer_iphone,customer_email,customer_address,customer_desc,customer_status,customer_updater,customer_updatetime,customer_extends)
+  	values(#{customerName},#{customerIphone},#{customerEmail},#{customerAddress},#{customerDesc},#{customerStatus},#{customerUpdater},#{customerUpdatetime},#{customerExtends})
+  </insert>
+  	
+  <!-- 客户查询的方法 -->
+  <select id="selectAll" parameterType="JxcCustomer" resultMap="JxcCustomerResultMap">
+  	select * from jxc_customer
+  	<where>
+  		<if test="customerStatus == null">
+  			customer_status=7000
+  		</if>
+  		<if test="customerName != null">
+  			and customer_name  like CONCAT('%',#{customerName},'%')
+  		</if>
+  	</where>
+  </select>	
+  
+  <!-- 客户查询个人的sql -->
+  <select id="select" parameterType="JxcCustomer" resultMap="JxcCustomerResultMap">
+  	select * 
+  	from 
+  		jxc_customer 
+  	where
+  		customer_id=#{customerId}	
+  </select>
+  
+  <!-- 客户修改的sql,customer_status=#{customerStatus},-->
+  <update id="update" parameterType="JxcCustomer">
+  	update jxc_customer
+  	set 
+  		customer_name=#{customerName},
+		customer_iphone=#{customerIphone},
+		customer_email=#{customerEmail},
+		customer_address=#{customerAddress},
+		customer_desc=#{customerDesc},
+		customer_updater=#{customerUpdater},
+		customer_updatetime=#{customerUpdatetime},
+		customer_extends=#{customerExtends}
+	  where 
+	  	customer_id=#{customerId}		
+  </update>
+  
+  <!-- 客户删除的sql -->
+  <delete id="delete" parameterType="JxcCustomer">
+  	update jxc_customer
+  	set 
+		customer_status=#{customerStatus}
+	where 
+	  	customer_id=#{customerId}	
+  </delete>
+  
+  <!-- 批量删除客户的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <delete id="deleteList">
+  	delete from jxc_customer
+  	where 
+  		customer_id
+  	in
+  	<foreach collection="list" item="customerId" open="(" close=")" separator=",">
+  		#{customerId}
+  	</foreach>
+  </delete>
+  
+  
+</mapper>

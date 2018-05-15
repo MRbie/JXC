@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcSalesorderMapper" >
+  <resultMap id="JxcSalesorderResultMap" type="com.bie.po.JxcSalesorder" >
+    <id column="salesOrder_id" property="salesorderId" jdbcType="INTEGER" />
+    <result column="customer_id" property="customerId" jdbcType="INTEGER" />
+    <result column="warehouse_id" property="warehouseId" jdbcType="INTEGER" />
+    <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="salesOrder_num" property="salesorderNum" jdbcType="INTEGER" />
+    <result column="salesOrder_code" property="salesorderCode" jdbcType="VARCHAR" />
+    <result column="salesOrder_price" property="salesorderPrice" jdbcType="DECIMAL" />
+    <result column="salesOrder_totalPrice" property="salesorderTotalprice" jdbcType="DECIMAL" />
+    <result column="salesOrder_desc" property="salesorderDesc" jdbcType="VARCHAR" />
+    <result column="salesOrder_status" property="salesorderStatus" jdbcType="VARCHAR" />
+    <result column="salesOrder_extends" property="salesorderExtends" jdbcType="VARCHAR" />
+    <result column="salesOrder_checkStatus" property="salesorderCheckstatus" jdbcType="VARCHAR" />
+    <result column="salesOrder_checkMan" property="salesorderCheckman" jdbcType="VARCHAR" />
+    <result column="salesOrder_result" property="salesorderCheckResult" jdbcType="VARCHAR" />
+    <result column="salesOrder_type" property="salesorderType" jdbcType="VARCHAR" />
+    <result column="salesOrder_updater" property="salesorderUpdater" jdbcType="VARCHAR" />
+    <result column="salesOrder_updatetime" property="salesorderUpdatetime" jdbcType="VARCHAR" />
+  
+  	<result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+  	<result column="employee_id" property="employeeId" jdbcType="INTEGER" />
+  	
+  	<!-- 其他字段的映射 -->
+  	<result column="employee_id" property="jxcEmployee.employeeId" jdbcType="INTEGER" />
+  	<result column="employee_name" property="jxcEmployee.employeeName" jdbcType="VARCHAR" />
+  	<!-- 仓库 -->
+  	<result column="warehouse_id" property="jxcWarehouse.warehouseId" jdbcType="INTEGER" />
+  	<result column="warehouse_name" property="jxcWarehouse.warehouseName" jdbcType="VARCHAR" />
+  	<!-- 供应商 -->
+  	<result column="supplier_id" property="jxcSupplier.supplierId" jdbcType="INTEGER" />
+  	<result column="supplier_name" property="jxcSupplier.supplierName" jdbcType="VARCHAR" />
+  	<!-- 商品 -->
+  	<result column="goods_id" property="jxcGoods.goodsId" jdbcType="INTEGER" />
+  	<result column="goods_name" property="jxcGoods.goodsName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 订单销售功能，最好使用事务 -->
+  <insert id="insert" parameterType="JxcSalesorder">
+  	insert into jxc_salesorder(customer_id,warehouse_id,goods_id,salesOrder_num,salesOrder_code,salesOrder_price,salesOrder_totalPrice,salesOrder_desc,salesOrder_status,salesOrder_extends,salesOrder_checkStatus,salesOrder_checkMan,salesOrder_result,salesOrder_type,salesOrder_updater,salesOrder_updatetime,supplier_id,employee_id)
+  	values(#{customerId},#{warehouseId},#{goodsId},#{salesorderNum},#{salesorderCode},#{salesorderPrice},#{salesorderTotalprice},#{salesorderDesc},#{salesorderStatus},#{salesorderExtends},#{salesorderCheckstatus},#{salesorderCheckman},#{salesorderCheckResult},#{salesorderType},#{salesorderUpdater},#{salesorderUpdatetime},#{supplierId},#{employeeId})
+  </insert>
+  
+  <!-- 查询出所有销售订单的信息 -->
+  <select id="selectAll" parameterType="JxcSalesorder" resultMap="JxcSalesorderResultMap">
+	select 
+		p.*,
+		w.warehouse_id as "jxcWarehouse.warehouseId",
+		w.warehouse_name as "jxcWarehouse.warehouseName",
+		s.supplier_id as "jxcSupplier.supplierId",
+		s.supplier_name as "jxcSupplier.supplierName",
+		g.goods_id as "jxcGoods.goodsId",
+		g.goods_name as "jxcGoods.goodsName",
+		e.employee_id as "jxcEmployee.employeeId",
+		e.employee_name as "jxcEmployee.employeeName"
+	from 
+		jxc_salesorder p,
+		jxc_warehouse w,
+		jxc_supplier s,
+		jxc_employee e,
+		jxc_goods g
+	<where> 
+		p.employee_id=e.employee_id 
+	and 
+		p.goods_id=g.goods_id 
+	and 
+		p.warehouse_id=w.warehouse_id 
+	and 
+		p.supplier_id=s.supplier_id
+		<if test="salesorderStatus != null">
+			and p.salesOrder_status=500
+		</if>
+		<if test="employeeName != null">
+			and e.employee_name=#{employeeName}
+		</if>
+		<if test="supplierName != null">
+			and s.supplier_name=#{supplierName}
+		</if>
+		<if test="warehouseName != null">
+			and w.warehouse_name=#{warehouseName}
+		</if>
+		<if test="goodsName != null">
+			and g.goods_name=#{goodsName}
+		</if>
+  	</where>
+  </select>
+  
+  
+  <!-- 销售订单退货的功能 -->
+  <update id="saleOrderReturn" parameterType="JxcSalesorder">
+  	update jxc_salesorder
+  	set 
+		salesOrder_status=#{salesorderStatus}
+	where 
+	  	salesOrder_id=#{salesorderId}
+  </update>
+  
+</mapper>

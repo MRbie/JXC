@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcReturnorderMapper" >
+  <resultMap id="BaseResultMap" type="com.bie.po.JxcReturnorder" >
+    <id column="returnorder_id" property="returnorderId" jdbcType="INTEGER" />
+    <result column="returnorder_date" property="returnorderDate" jdbcType="VARCHAR" />
+    <result column="returnorder_shouldmoney" property="returnorderShouldmoney" jdbcType="DECIMAL" />
+    <result column="returnorder_actualmoney" property="returnorderActualmoney" jdbcType="DECIMAL" />
+    <result column="returnorder_status" property="returnorderStatus" jdbcType="VARCHAR" />
+    <result column="returnorder_extend" property="returnorderExtend" jdbcType="VARCHAR" />
+    <result column="returnorder_desc" property="returnorderDesc" jdbcType="VARCHAR" />
+    <result column="returnorder_update" property="returnorderUpdate" jdbcType="VARCHAR" />
+    <result column="returnorder_updatetime" property="returnorderUpdatetime" jdbcType="VARCHAR" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="warehouse_id" property="warehouseId" jdbcType="INTEGER" />
+  </resultMap>
+  
+</mapper>

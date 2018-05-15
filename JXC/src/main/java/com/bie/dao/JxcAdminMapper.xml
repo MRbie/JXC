@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcAdminMapper" >
+  <resultMap id="JxcAdminResultMap" type="com.bie.po.JxcAdmin" >
+    <id column="admin_id" property="adminId" jdbcType="INTEGER" />
+    <result column="admin_name" property="adminName" jdbcType="VARCHAR" />
+    <result column="admin_type" property="adminType" jdbcType="VARCHAR" />
+    <result column="admin_status" property="adminStatus" jdbcType="VARCHAR" />
+    <result column="admin_extend" property="adminExtend" jdbcType="VARCHAR" />
+  	<result column="admin_account" property="adminAccount" jdbcType="VARCHAR" />
+  	<result column="admin_password" property="adminPassword" jdbcType="VARCHAR" />
+  	<result column="admin_age" property="adminAge" jdbcType="INTEGER" />
+  	<result column="admin_sex" property="adminSex" jdbcType="VARCHAR" />
+  	<result column="admin_phone" property="adminPhone" jdbcType="VARCHAR" />
+  	<result column="admin_email" property="adminEmail" jdbcType="VARCHAR" />
+  	<result column="admin_birthday" property="adminBirthday" jdbcType="TIMESTAMP" />
+  	<result column="admin_code" property="adminCode" jdbcType="VARCHAR" />
+  	<result column="admin_cardno" property="adminCardno" jdbcType="VARCHAR" />
+  	<result column="admin_address" property="adminAddres" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 
+  	//adminName adminType adminStatus adminExtend adminAccount adminPassword adminCardno
+	//adminAge adminSex  adminPhone adminEmail adminBirthday adminAddres adminCode  
+   -->
+  <!-- 管理员插入的sql, parameterType="JxcAdmin" -->
+  <insert id="insertAdmin" parameterType="JxcAdmin" >
+  	insert into jxc_admin(admin_name,admin_type,admin_status,admin_extend,admin_account,admin_password,admin_age,admin_sex,admin_phone,admin_email,admin_birthday,admin_code,admin_cardno)
+  	values(#{adminName},#{adminType},#{adminStatus},#{adminExtend},#{adminAccount},#{adminPassword},#{adminAge},#{adminSex},#{adminPhone},#{adminEmail},#{adminBirthday},#{adminCode},#{adminCardno});
+  </insert>
+  
+  <!-- 
+  	参数解释:
+  		id和命名空间用来定位SQL语句。
+  		parameterType表示参数的类型。
+  		resultMap返回类型。
+  	参数的写法#{deptID}
+  -->
+  <!-- 管理员登陆的方法 -->
+  <select id="adminLogin" parameterType="JxcAdmin" resultMap="JxcAdminResultMap">
+	<!-- select 
+		admin_account,admin_password 
+	from 
+		jxc_admin 
+	where 
+		admin_account=#{adminAccount} 
+	and 
+		admin_password=#{adminPassword}
+	and
+  		admin_status=2000 -->
+  	select 
+		admin_account,admin_password 
+	from 
+		jxc_admin 
+	<where>
+		<if test="adminAccount != null">
+			admin_account=#{adminAccount} 
+		</if>
+		<if test="adminPassword != null">
+		and 
+			admin_password=#{adminPassword}
+		</if>
+		<if test="adminStatus == null">
+		and
+  			admin_status=2000
+		</if>
+	</where>
+  </select>
+	
+  <!-- 查询所有管理员的方法,注意,返回值类型是List<JxcAdmin>类型的。 -->
+  <select id="selectAllAdmin" parameterType="JxcAdmin" resultMap="JxcAdminResultMap">
+  	select * from jxc_admin
+  	<where>
+  		<if test="adminStatus == null">
+  			admin_status=2000
+  		</if>
+  		<if test="adminName != null">
+  			<!-- and admin_name=#{adminName} -->
+  			<!-- 实现模糊查询,完善功能 -->
+  			and admin_name like CONCAT('%',#{adminName},'%') 
+  		</if>
+  		<if test="adminAccount != null">
+  			<!-- and admin_account=#{adminAccount} -->
+  			and admin_account like CONCAT('%',#{adminAccount},'%') 
+  		</if>
+  	</where>
+  </select>	
+  
+  <!-- 查询单个管理员的信息 -->
+  <select id="queryBySingle" resultMap="JxcAdminResultMap">
+  	select * from jxc_admin where admin_id=#{adminId}
+  </select>	
+  
+  <!-- 修改管理员信息的sql -->
+  <update id="updateAdmin" parameterType="JxcAdmin">
+  	update jxc_admin
+  	set 
+  		admin_name=#{adminName}
+		,admin_type=#{adminType}
+		,admin_status=#{adminStatus}
+		,admin_extend=#{adminExtend}
+		,admin_account=#{adminAccount}
+		,admin_password=#{adminPassword}
+		,admin_age=#{adminAge}
+		,admin_sex=#{adminSex}
+		,admin_phone=#{adminPhone}
+		,admin_email=#{adminEmail}
+		,admin_birthday=#{adminBirthday}
+		,admin_code=#{adminCode}
+		,admin_cardno=#{adminCardno}
+	<where>
+		<if test="adminId != null">
+			admin_id=#{adminId}
+		</if>
+	</where>
+	<!-- where
+		admin_id=#{adminId} -->
+		
+  </update>
+  
+  <!-- 删除管理员信息的sql,delete from jxc_admin where admin_id=#{adminId} -->
+  <delete id="deleteAdmin" parameterType="JxcAdmin">
+  	update jxc_admin 
+  	set 
+  		admin_status=#{adminStatus}
+  	where 
+  		admin_id=#{adminId}
+  </delete>
+  
+  <!-- 批量删除管理员的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <delete id="batchDeleteAdmin">
+  	delete from jxc_admin
+  	where 
+  		admin_id
+  	in
+  	<foreach collection="list" item="adminId" open="(" close=")" separator=",">
+  		#{adminId}
+  	</foreach>
+  </delete>
+  
+  
+  
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bie.dao.JxcWarehouseMapper" >
+  <resultMap id="JxcWarehouseResultMap" type="com.bie.po.JxcWarehouse" >
+    <id column="warehouse_id" property="warehouseId" jdbcType="INTEGER" />
+    <!-- <result column="employee_id" property="employeeId" jdbcType="INTEGER" /> -->
+    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+    <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR" />
+    <result column="warehouse_address" property="warehouseAddress" jdbcType="VARCHAR" />
+    <result column="warehouse_desc" property="warehouseDesc" jdbcType="VARCHAR" />
+    <result column="warehouse_updater" property="warehouseUpdater" jdbcType="VARCHAR" />
+    <result column="warehouse_updatetime" property="warehouseUpdatetime" jdbcType="VARCHAR" />
+    <result column="warehouse_status" property="warehouseStatus" jdbcType="VARCHAR" />
+    <result column="warehouse_extends" property="warehouseExtends" jdbcType="VARCHAR" />
+ 	<result column="warehouse_personLiable" property="warehousePersonLiable" jdbcType="VARCHAR" />
+    <result column="warehouse_type" property="warehouseType" jdbcType="VARCHAR" />
+  
+  </resultMap>
+  
+  <!-- 
+	//warehouseId employeeId warehouseName warehouseCode warehouseAddress
+	//warehouseDesc warehouseUpdater warehouseUpdatetime
+	//warehouseStatus warehouseExtends warehousePersonLiable warehouseType
+  -->
+  <!-- 仓库插入的方法 -->
+  <insert id="insert" parameterType="JxcWarehouse">
+  	insert into jxc_warehouse(warehouse_name,warehouse_code,warehouse_address,warehouse_desc,warehouse_updater,warehouse_updatetime,warehouse_status,warehouse_extends,warehouse_personLiable,warehouse_type)
+  	values(#{warehouseName},#{warehouseCode},#{warehouseAddress},#{warehouseDesc},#{warehouseUpdater},#{warehouseUpdatetime},#{warehouseStatus},#{warehouseExtends},#{warehousePersonLiable},#{warehouseType})
+  </insert>
+  	
+  <!-- 仓库查询的方法 -->
+  <select id="selectAll" parameterType="JxcWarehouse" resultMap="JxcWarehouseResultMap">
+  	select * from jxc_warehouse
+  	<where>
+  		<if test="warehouseStatus == null">
+  			warehouse_status=8000
+  		</if>
+  		<if test="warehouseName != null">
+  			and warehouse_name  like CONCAT('%',#{warehouseName},'%')
+  		</if>
+  		<if test="warehouseType != null">
+  			and warehouse_type  like CONCAT('%',#{warehouseType},'%')
+  		</if>
+  	</where>
+  </select>	
+  
+  <!-- 仓库查询单个的sql -->
+  <select id="select" parameterType="JxcWarehouse" resultMap="JxcWarehouseResultMap">
+  	select * 
+  	from 
+  		jxc_warehouse 
+  	where
+  		warehouse_id=#{warehouseId}
+  </select>
+  
+  <!-- 仓库修改的sql,warehouse_status=#{warehouseStatus},employee_id=#{employeeId},-->
+  <update id="update" parameterType="JxcWarehouse">
+  	update jxc_warehouse
+  	set 
+		warehouse_name=#{warehouseName},
+		warehouse_code=#{warehouseCode},
+		warehouse_address=#{warehouseAddress},
+		warehouse_desc=#{warehouseDesc},
+		warehouse_updater=#{warehouseUpdater},
+		warehouse_updatetime=#{warehouseUpdatetime},
+		warehouse_extends=#{warehouseExtends},
+		warehouse_personLiable=#{warehousePersonLiable},
+		warehouse_type=#{warehouseType}
+	  where 
+	  	warehouse_id=#{warehouseId}		
+  </update>
+  
+  <!-- 仓库删除的sql -->
+  <delete id="delete" parameterType="JxcWarehouse">
+  	update jxc_warehouse
+  	set 
+		warehouse_status=#{warehouseStatus}
+	where 
+	  	warehouse_id=#{warehouseId}	
+  </delete>
+  
+  <!-- 批量删除仓库的sql,collection:表示类型,这里参数是数组,就写成array,如果是集合,就写成list -->
+  <delete id="deleteList">
+  	delete from jxc_warehouse
+  	where 
+  		warehouse_id
+  	in
+  	<foreach collection="list" item="warehouseId" open="(" close=")" separator=",">
+  		#{warehouseId}
+  	</foreach>
+  </delete>
+  
+  
+</mapper>
